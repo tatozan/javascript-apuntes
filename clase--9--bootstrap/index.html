@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <form id="idForm">
+            <div class="mb-3">
+                <label for="idUser" class="form-label"> User </label>
+                <input type="text" class="form-control" id="idUser">
+            </div>   
+            <div class="mb-3">
+                <label for="idEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="idEmail">
+            </div>
+
+            <div class="mb-3">
+                <label for="idPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="idPassword">
+            </div>
+            <!-- 
+            para enviar todos los datos seria logico pensar colocar un manejador de eventos
+            al boton submit cuando hacen click, pero no funciona asi, cuando lo hago la pagina se recarga, 
+            porque esta pensado para ir a otra pagina y usar los datos que lleve todo el formulario
+            <button type="submit" id="idBoton" class="btn btn-primary"> Crear Usuario </button>
+            Nunca se consulta por el boton tenga o no tenga base de datos, siempre por el formulario
+            -->
+
+            <button type="submit" class="btn btn-primary"> Crear Usuario </button>
+            <br><br>
+        </form>
+    </div>
+            <!-- 
+                Creo html para mostrar los datos de los usuarios guardados 
+            -->
+            <div class="container">
+                <button id="botonUsers" class="btn btn-dark"> Mostrar Usuarios </button> <br><br>
+                <div class="divUsers" class="row"></div>
+            </div>
+    
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
