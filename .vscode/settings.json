@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        "**/.svn": false,
+        "**/CVS": false
+    },
+    "liveServer.settings.port": 5500
+}

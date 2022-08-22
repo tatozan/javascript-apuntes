@@ -1,0 +1,31 @@
+[
+    {
+        "nombre": "Notebook",
+        "marca": "Lenovo",
+        "modelo": "Y510P",
+        "precio": "60000",
+        "stock": "30",
+        "img": "notebook-lenovo.jpg"
+
+    },
+    {
+        "nombre": "Celular",
+        "marca": "Xiaomi",
+        "modelo": "Mi-9",
+        "precio": "35000",
+        "stock": "20",
+        "img": "xiaomi-mi-9.jpg"
+
+    },
+
+    {
+        "nombre": "Smart tv",
+        "marca": "Novatech",
+        "modelo": "50D1U",
+        "precio": "57000",
+        "stock": "10",
+        "img": "smart-tv.jpg"
+
+    }
+
+]

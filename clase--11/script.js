@@ -17,7 +17,7 @@ class Tarea{
 let tareas = [];
 
 //comprobamos si el localStorage existe el array de tareas, por si el usuario nunca lo creo o borro el historial
-//NULL si no existe o array de tareas si existe
+//devuelve NULL si no existe o el array de tareas si existe
 //hago esta comprobacion porque si el localStorage existiese con un array previamente, y luego yo cargo datos, sobreescribiria esa informacion
 //IMPORTANTE: hacemos esta comprobacion tambien porque nosotros si solo trabajamos con un array de objetos, cada vez que se cargue la pagina, se borrarian esos datos, y para que sea persistente en el tiempo necesitamos a localStorage
 if(localStorage.getItem('tareas')){
@@ -63,6 +63,7 @@ formTareas.addEventListener("submit", (event) => {
     
     //Lo guardamos con un let, en vez de una constante, porque cada vez que se ejecute los valores se van a ir modificando
     //en realidad por ser variables de ambito local, no habria problema en utilizar let o const, pero es para evitar posibles problemas
+    //en este caso formData devuelve un objeto que contiene todos los valores del formulario como atributos
     let dataForm = new FormData(event.target);
 
     console.log(dataForm.get("nombre"), dataForm.get("descripcion"));
@@ -77,8 +78,7 @@ formTareas.addEventListener("submit", (event) => {
 
     console.log(tareas);
 
-    //donde guardo las tareas ademas del array en el localStorage
-    //porque mi localStorage voy a guardar todas las tareas que crea mi usuario
+    //guardo las tareas que crea el usuario en mi localStorage
     localStorage.setItem("tareas", JSON.stringify(tareas));
 
     //reseteo el formulario
@@ -90,12 +90,14 @@ formTareas.addEventListener("submit", (event) => {
 botonTareas.addEventListener("click", () => {
     let arrayStorage = JSON.parse(localStorage.getItem("tareas"));
 
-    //borro el contenedor para cuando de clocik a mostrar tareas no me acumule las tareas.
-    divTareas.Tareas.innerHTML += "";
+    //borro el contenedor para cuando de click a "mostrar tareas" no me acumule las tareas.
+    //divTareas.Tareas.innerHTML += "";
+    divTareas.innerHTML = "";
+    
     //forEach() puede recibir dos parametros (objeto, indice)
     //cuando no le solicitamos id al usuario, que comunmente no se hace, tenemos que generarlo, por eso consultamos el indice del array para generar un id unico. 
     arrayStorage.forEach((tarea, indice) => {
-        divTareas.Tareas.innerHTML += `
+        divTareas.innerHTML += `
         <div class="card border-dark mb-3" id="tarea${indice}" style="max-width: 20rem; margin: 4px;">
             <div class="card-header">${tarea.nombre}</div>
             <div class="card-body">
@@ -105,42 +107,43 @@ botonTareas.addEventListener("click", () => {
         </div>   
         `
     })
+
+    //para eliminar cada tarea debemos hacerlo dinamicamente, y eliminar la parte html generada, del localStorage y del arreglo
+    //por eso, una vez generada las tareas utilizamos nuevamente forEach() para identificar cada objeto con su id.
+
+    //agregamos un evento escuchador a cada elemento del dom, en realidad no es la solucion mas optima, la mas optima es utilizando herencia
+    //Hay dos formas de solucionar el eliminar cada tarea, la primera consultando con el id del elemento, y la segunda es agregando un id al boton,
+    //la primera es mas recomendada para evitar agregar id al elemento de forma innecesaria
+
+    //Ahora debemos identificar mediante DOM el boton eliminar que corresponde a cada contenedor del html que tenemos identificado con el id, para esto debemos:
+    //1) Buscar en nuestro html generado en botonTareas.addEventListener(), cuantos elementos hijos tiene el contenedor que posee id de la forma tarea[indice], es decir dos hijos.
+    //2) Vemos que, el contenedor "card" tiene dos elementos hijos, el contenedor "card-header" y contenedor "card-body", en ese orden.
+    //3) entonces para identificar el ultimo elemento hijo de "card" utilizamos la propiedad lastElementChild.
+    //4) Ahora buscamos el ultimo hijo de card-body, aplicando lastElementChild a card-body, este seria el boton con class name "btn btn-danger", boton que utilizamos para eliminar una tarea en particular
+    //En conclusion buscamos el ultimo elemento hijo, del ultimo elemento hijo.
+    arrayStorage.forEach((tarea, indice) => {
+        //como generamos un contenedor por cada tarea de la forma: tarea[indice] al recorrerlo con forEach() podemos identificar cada contenedor
+        //guardamos el boton particular de cada objeto
+        let botonCard = document.getElementById(`tarea${indice}`).lastElementChild.lastElementChild;
+
+        //agregamos un evento de tipo click, para cada uno de los botones eliminar
+
+        botonCard.addEventListener("click", () => {
+            //Lo recomendable siempre es eliminar el elemento primero en el DOM y luego en el localStorage
+            //utilizo metodo remove(), asi elimino el contenedor "card" de la tarea en particular
+            document.getElementById(`tarea${indice}`).remove();
+
+            //ahora eliminamos el elemento del array
+            //recordar que con splice() eliminamos un elemento dado su indice, con slice() copiamos
+            tareas.splice(indice, 1);
+
+            //eliminamos el objeto del localStorage
+            localStorage.setItem("tareas", JSON.stringify(tareas));
+
+            console.log(`Tarea ${tarea.nombre} eliminada`);
+
+        })
+    });
 })
 
-//para eliminar cada tarea debemos hacerlo dinamicamente, y eliminar la parte html generada, del localStorage y del arreglo
-//por eso, una vez generada las tareas utilizamos nuevamente forEach() para identificar cada objeto con su id.
 
-//agregamos un evento escuchador a cada elemento del dom, en realidad no es la solucion mas optima, la mas optima es utilizando herencia
-//Hay dos formas de solucionar el eliminar cada tarea, la primera consultando con el id del elemento, y la segunda es agregando un id al boton,
-//la primera es mas recomendada para evitar agregar id al elemento de forma innecesaria
-
-//Ahora debemos identificar mediante DOM el boton eliminar que corresponde a cada contenedor del html que tenemos identificado con el id, para esto debemos:
-//1) Buscar en nuestro html generado en botonTareas.addEventListener(), cuantos elementos hijos tiene el contenedor que posee id de la forma tarea[indice], es decir dos hijos.
-//2) Vemos que, el contenedor "card" tiene dos elementos hijos, el contenedor "card-header" y contenedor "card-body", en ese orden.
-//3) entonces para identificar el ultimo elemento hijo de "card" utilizamos la propiedad lastElementChild.
-//4) Ahora buscamos el ultimo hijo de card-body, aplicando lastElementChild a card-body, este seria el boton con class name "btn btn-danger", boton que utilizamos para eliminar una tarea en particular
-//En conclusion buscamos el ultimo elemento hijo, del ultimo elemento hijo.
-arrayStorage.forEach((tarea, indice) => {
-    //como generamos un contenedor por cada tarea de la forma: tarea[indice] al recorrerlo con forEach() podemos identificar cada contenedor
-    //guardamos el boton particular de cada objeto
-    let botonCard = document.getElementById(`tarea${indice}`).lastElementChild.lastElementChild;
-
-    //agregamos un evento de tipo click, para cada uno de los botones eliminar
-
-    botonCard.addEventListener("click", () => {
-        //Lo recomendable siempre es eliminar el elemento primero en el DOM y luego en el localStorage
-        //utilizo metodo remove(), asi elimino contenedor el contenedor "card" de la tarea en particular
-        document.getElementById(`tarea${indice}`).remove();
-
-        //ahora eliminamos el elemento del array
-        //recordar que con splice() eliminamos un elemento dado su indice, con slice() copiamos
-        tareas.splice(indice, 1);
-
-        //eliminamos el objeto del localStorage
-        localStorage.setItem("tareas", JSON.stringify(tareas));
-
-        console.log(`Tarea ${tarea.nombre} eliminada`);
-
-    })
-
-});

@@ -297,8 +297,8 @@ Ejemplo completo con llamada a funcion flecha
     let numero1, numero2, operacion;
 
     do{
-        numero1 = parseFloat(prompt("Ingrese un numeroero"));
-        numero2 = parseFloat(prompt("Ingrese otr numeroero"));
+        numero1 = parseFloat(prompt("Ingrese un numero"));
+        numero2 = parseFloat(prompt("Ingrese otro numero"));
         operacion = prompt("Ingrese operacion: + - / * ");
 
         if(isNaN(numero1) || isNaN(numero2){
